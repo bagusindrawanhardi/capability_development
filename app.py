@@ -58,7 +58,7 @@ except Exception as e:
 participants = [
     "Ernanda (BackEnd Developer)", "Yudi (FrontEnd Developer)", "Wahyu Widi (Developer)",
     "Gilas (Developer)", "Irwan (FrontEnd Developer)", "Nahrowi (Data Scientist)",
-    "David (Designer)", "Ammar (Product Manager)", "Bagus (Data Scientist)"
+    "David (Designer)", "Ammar (Product Manager)", "Zaki (BackEnd Developer)"
 ]
 
 week_dropdown = [
