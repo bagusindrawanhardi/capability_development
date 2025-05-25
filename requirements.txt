@@ -1,0 +1,5 @@
+dash==2.15.0
+gspread==6.2.1
+pandas==2.0.3
+plotly==5.9.0
+protobuf==6.31.0
