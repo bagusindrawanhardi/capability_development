@@ -87,7 +87,9 @@ competency_map = {
 weeks = list(week_criteria.keys())
 
 # --- App setup ---
-app = Dash(__name__)
+app = dash.Dash(__name__, external_stylesheets=[dbc.themes.BOOTSTRAP])
+server = app.server
+
 app.title = "GEARS Capability Development Dashboard"
 
 # --- Layout ---
