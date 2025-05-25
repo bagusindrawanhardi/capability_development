@@ -23,7 +23,7 @@ logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
 # Path to your service account credentials JSON and your Google Sheet key
-cred_file = 'api2-387815-6e8d5d70f48d.json'
+cred_file = 'api2-387815-e465ef271e8d.json'
 sheet_key = '13FEr2LjKcpsUQnOBp0GJvsVUmPVZNa7H4lXrs7n8abY'
 
 # Initialize worksheet variable so it's always defined
