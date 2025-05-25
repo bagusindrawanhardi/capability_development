@@ -13,8 +13,6 @@ import plotly.graph_objects as go
 import pandas as pd
 import logging# -*- coding: utf-8 -*-
 
-Created on Mon May  5 09:20:57 2025
-
 # --- Google Sheets setup ---
 import gspread
 from gspread.exceptions import WorksheetNotFound
