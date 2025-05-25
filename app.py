@@ -8,6 +8,7 @@ Created on Mon May  5 09:20:57 2025
 import os
 import dash
 from dash import Dash, html, dcc, Input, Output, State, ALL, dash_table
+import dash_bootstrap_components as dbc
 import plotly.graph_objects as go
 import pandas as pd
 import logging
