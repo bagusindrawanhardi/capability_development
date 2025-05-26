@@ -164,14 +164,18 @@ app.layout = html.Div(
                 html.Div(
                     [
                         html.Div(
-                            [html.Img(id="participant-photo", src="",
-                                      style={"height": "200px", "borderRadius": "10px", "marginTop": "30px", "marginBottom": "30px"}),
-                             html.Div(id="readiness-score-text",
-                                      style={"fontSize": "30px", "fontWeight": "bold"})],
-                            style={'border': '2px solid #28a745', 'padding': '20px',
-                                   'borderRadius': '10px', 'width': '40%', 'color': '#28a745',
-                                   'textAlign': 'center', 'display': 'inline-block',
-                                   'backgroundColor': 'white', 'verticalAlign': 'top'}
+                            [
+                                html.Img(id="participant-photo", src="",
+                                         style={"height": "200px", "borderRadius": "10px", "marginTop": "30px", "marginBottom": "30px"}),
+                                html.Div(id="readiness-score-text", style={"fontSize": "30px", "fontWeight": "bold"}),
+                                html.Div(id="readiness-score-title", style={"fontSize": "20px", "marginTop": "5px"})
+                            ],
+                            style={
+                                'border': '2px solid #28a745', 'padding': '20px',
+                                'borderRadius': '10px', 'width': '40%', 'color': '#28a745',
+                                'textAlign': 'center', 'display': 'inline-block',
+                                'backgroundColor': 'white', 'verticalAlign': 'top'
+                            }
                         ),
                         html.Div(dcc.Graph(id="windrose-diagram"),
                                  style={'width': '55%', 'display': 'inline-block',
@@ -182,7 +186,7 @@ app.layout = html.Div(
                     style={'display': 'flex', 'justifyContent': 'space-between'}
                 )
             ],
-            style={'width': '60%', 'display': 'inline-block', 'padding': '20px',
+            style={'width': '62%', 'display': 'inline-block', 'padding': '20px',
                    'border': '2px solid #ccc', 'borderRadius': '10px',
                    'boxShadow': '0 2px 6px rgba(0,0,0,0.1)', 'marginLeft': '2%'}
         )
@@ -192,24 +196,10 @@ app.layout = html.Div(
 
 # --- Callbacks ---
 @app.callback(
-    Output("sliders-container", "children"),
-    Input("week", "value")
-)
-def update_sliders(week):
-    return [
-        html.Div([
-            html.Label(f"{crit} (0–10)"),
-            dcc.Slider(id={"type": "dynamic-slider", "index": crit},
-                       min=0, max=10, step=1, value=5,
-                       marks={i: str(i) for i in range(11)})
-        ], style={"marginBottom": "10px"})
-        for crit in week_criteria.get(week, [])
-    ]
-
-@app.callback(
     Output("score-trend", "figure"),
     Output("participant-photo", "src"),
     Output("readiness-score-text", "children"),
+    Output("readiness-score-title", "children"),
     Output("windrose-diagram", "figure"),
     Output("score-table", "data"),
     Input("submit-score", "n_clicks"),
@@ -296,6 +286,26 @@ def update_scores(submit_clicks, view_participant, participant, reviewer, week, 
     readiness = round(sum(all_scores)/len(all_scores), 2) if all_scores else 0
     rd_text = f"🚀 Readiness Score: {readiness}/10"
 
+    # Readiness Title mapping
+    rd_title = ""
+    ranges = [
+        (0, 2, "Not ready"),
+        (2, 3, "Need more preparation"),
+        (3, 4, "Requires further practice"),
+        (4, 5, "On the right track"),
+        (5, 6, "Fairly ready"),
+        (6, 7, "Ready"),
+        (7, 8, "Well prepared"),
+        (8, 9, "Very prepared"),
+        (9, 10, "You are very ready")
+    ]
+    for low, high, label in ranges:
+        if readiness >= low and readiness < high:
+            rd_title = label
+            break
+    if readiness == 10:
+        rd_title = "You are very ready"
+
     # Windrose using ordered categories
     rs = []
     for cat in categories:
@@ -318,7 +328,7 @@ def update_scores(submit_clicks, view_participant, participant, reviewer, week, 
     photo = view_participant.split(" ")[0]
     src = f"/assets/photo/{photo}.PNG"
 
-    return tf, src, rd_text, polar, table_data
+    return tf, src, rd_text, rd_title, polar, table_data
 
 if __name__ == "__main__":
     app.run_server(debug=True, port=8051)
