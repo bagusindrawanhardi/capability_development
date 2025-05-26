@@ -103,10 +103,7 @@ app.layout = html.Div(
     [
         html.H1(
             "GEARS Capability Development Dashboard",
-            style={
-                'textAlign': 'center', 'marginTop': '20px',
-                'marginBottom': '30px', 'color': '#333'
-            }
+            style={'textAlign': 'center', 'marginTop': '20px', 'marginBottom': '30px', 'color': '#333'}
         ),
         html.Div(
             [
@@ -125,11 +122,21 @@ app.layout = html.Div(
                 ),
                 html.Br(),
                 html.Label("📅 Week"),
-                dcc.Dropdown(id="week", options=week_dropdown, value="Week 1"),
-                html.Br(),
-                html.Div(id="sliders-container", style={"marginTop": "20px"}),
-                html.Button("Submit Score", id="submit-score", n_clicks=0,
-                            style={"marginTop": "10px", "marginBottom": "20px"}),
+                dcc.Dropdown(
+                    id="week",
+                    options=week_dropdown,
+                    value="Week 1"
+                ),
+                html.Div(
+                    id="sliders-container",
+                    style={"marginTop": "20px"}
+                ),
+                html.Button(
+                    "Submit Score",
+                    id="submit-score",
+                    n_clicks=0,
+                    style={"marginTop": "10px", "marginBottom": "20px"}
+                ),
                 html.H4("Evaluation History"),
                 dash_table.DataTable(
                     id="score-table",
@@ -140,9 +147,14 @@ app.layout = html.Div(
                 )
             ],
             style={
-                'width': '33%', 'display': 'inline-block', 'verticalAlign': 'top',
-                'padding': '20px', 'border': '2px solid #ccc', 'borderRadius': '10px',
-                'boxShadow': '0 2px 6px rgba(0,0,0,0.1)', 'backgroundColor': '#fafafa'
+                'width': '33%',
+                'display': 'inline-block',
+                'verticalAlign': 'top',
+                'padding': '20px',
+                'border': '2px solid #ccc',
+                'borderRadius': '10px',
+                'boxShadow': '0 2px 6px rgba(0,0,0,0.1)',
+                'backgroundColor': '#fafafa'
             }
         ),
         html.Div(
@@ -153,48 +165,105 @@ app.layout = html.Div(
                         dcc.Dropdown(
                             id="right-participant",
                             options=[{"label": p, "value": p} for p in participants],
-                            value=participants[0], clearable=False,
+                            value=participants[0],
+                            clearable=False,
                             style={"width": "600px", "marginBottom": "20px"}
                         ),
-                        dcc.Graph(id="score-trend", style={"backgroundColor": "white"})
+                        dcc.Graph(
+                            id="score-trend",
+                            style={"backgroundColor": "white"}
+                        )
                     ],
-                    style={"marginBottom": "30px", "padding": "10px",
-                           "border": "2px solid #3399ff", "borderRadius": "10px"}
+                    style={
+                        "marginBottom": "30px",
+                        "padding": "10px",
+                        "border": "2px solid #3399ff",
+                        "borderRadius": "10px"
+                    }
                 ),
                 html.Div(
                     [
                         html.Div(
                             [
-                                html.Img(id="participant-photo", src="",
-                                         style={"height": "200px", "borderRadius": "10px", "marginTop": "30px", "marginBottom": "30px"}),
-                                html.Div(id="readiness-score-text", style={"fontSize": "30px", "fontWeight": "bold"}),
-                                html.Div(id="readiness-score-title", style={"fontSize": "20px", "marginTop": "5px"})
+                                html.Img(
+                                    id="participant-photo",
+                                    src="",
+                                    style={"height": "200px", "borderRadius": "10px", "marginTop": "30px", "marginBottom": "30px"}
+                                ),
+                                html.Div(
+                                    id="readiness-score-text",
+                                    style={"fontSize": "30px", "fontWeight": "bold"}
+                                ),
+                                html.Div(
+                                    id="readiness-score-title",
+                                    style={"fontSize": "20px", "marginTop": "5px"}
+                                )
                             ],
                             style={
-                                'border': '2px solid #28a745', 'padding': '20px',
-                                'borderRadius': '10px', 'width': '40%', 'color': '#28a745',
-                                'textAlign': 'center', 'display': 'inline-block',
-                                'backgroundColor': 'white', 'verticalAlign': 'top'
+                                'border': '2px solid #28a745',
+                                'padding': '20px',
+                                'borderRadius': '10px',
+                                'width': '40%',
+                                'color': '#28a745',
+                                'textAlign': 'center',
+                                'display': 'inline-block',
+                                'backgroundColor': 'white',
+                                'verticalAlign': 'top'
                             }
                         ),
-                        html.Div(dcc.Graph(id="windrose-diagram"),
-                                 style={'width': '55%', 'display': 'inline-block',
-                                        'verticalAlign': 'top', 'marginLeft': '2%',
-                                        'padding': '10px', 'border': '2px solid #ff9933',
-                                        'borderRadius': '10px', 'backgroundColor': '#fff'})
+                        html.Div(
+                            dcc.Graph(id="windrose-diagram"),
+                            style={
+                                'width': '55%',
+                                'display': 'inline-block',
+                                'verticalAlign': 'top',
+                                'marginLeft': '2%',
+                                'padding': '10px',
+                                'border': '2px solid #ff9933',
+                                'borderRadius': '10px',
+                                'backgroundColor': '#fff'
+                            }
+                        )
                     ],
                     style={'display': 'flex', 'justifyContent': 'space-between'}
                 )
             ],
-            style={'width': '62%', 'display': 'inline-block', 'padding': '20px',
-                   'border': '2px solid #ccc', 'borderRadius': '10px',
-                   'boxShadow': '0 2px 6px rgba(0,0,0,0.1)', 'marginLeft': '2%'}
+            style={
+                'width': '60%',
+                'display': 'inline-block',
+                'padding': '20px',
+                'border': '2px solid #ccc',
+                'borderRadius': '10px',
+                'boxShadow': '0 2px 6px rgba(0,0,0,0.1)',
+                'marginLeft': '2%'
+            }
         )
     ],
     style={"padding": "0px 30px", "fontFamily": "Arial, sans-serif"}
 )
 
 # --- Callbacks ---
+@app.callback(
+    Output("sliders-container", "children"),
+    Input("week", "value")
+)
+def update_sliders(week):
+    return [
+        html.Div(
+            [
+                html.Label(f"{crit} (0–10)"),
+                dcc.Slider(
+                    id={"type": "dynamic-slider", "index": crit},
+                    min=0, max=10, step=1,
+                    value=5,
+                    marks={i: str(i) for i in range(11)}
+                )
+            ],
+            style={"marginBottom": "10px"}
+        )
+        for crit in week_criteria.get(week, [])
+    ]
+
 @app.callback(
     Output("score-trend", "figure"),
     Output("participant-photo", "src"),
@@ -208,7 +277,7 @@ app.layout = html.Div(
     State("reviewer", "value"),
     State("week", "value"),
     State({"type": "dynamic-slider", "index": ALL}, "value"),
-    State({"type": "dynamic-slider", "index": ALL}, "id"))
+    State({"type": "dynamic-slider", "index": ALL}, "id")
 def update_scores(submit_clicks, view_participant, participant, reviewer, week, values, ids):
     global score_data, sh
     ctx = dash.callback_context
@@ -251,30 +320,15 @@ def update_scores(submit_clicks, view_participant, participant, reviewer, week, 
         tf.add_trace(go.Scatter(
             x=part_df['Week'], y=part_df['Final Score'], mode='lines+markers'
         ))
-    # Enable major and minor grid lines
     tf.update_layout(
         title=f"{view_participant} Score Trend",
         xaxis=dict(
-            title="Week",
-            showgrid=True,
-            gridcolor="lightgrey",
-            gridwidth=1,
-            minor=dict(
-                showgrid=True,
-                gridcolor="lightgrey",
-                gridwidth=0.5
-            )
+            title="Week", showgrid=True, gridcolor="lightgrey", gridwidth=1,
+            minor=dict(showgrid=True, gridcolor="lightgrey", gridwidth=0.5)
         ),
         yaxis=dict(
-            title="Score (0–10)",
-            showgrid=True,
-            gridcolor="lightgrey",
-            gridwidth=1,
-            minor=dict(
-                showgrid=True,
-                gridcolor="lightgrey",
-                gridwidth=0.5
-            )
+            title="Score (0–10)", showgrid=True, gridcolor="lightgrey", gridwidth=1,
+            minor=dict(showgrid=True, gridcolor="lightgrey", gridwidth=0.5)
         ),
         plot_bgcolor='white'
     )
@@ -306,29 +360,28 @@ def update_scores(submit_clicks, view_participant, participant, reviewer, week, 
     if readiness == 10:
         rd_title = "You are very ready"
 
-    # Windrose using ordered categories
+    # Windrose diagram
     rs = []
     for cat in categories:
         vals = []
         for wk, comp in competency_map.items():
             if comp == cat:
                 for crit in week_criteria[wk]:
-                    if crit in df_sel.columns:
-                        vals += df_sel[crit].dropna().tolist()
+                    vals += df_sel[crit].dropna().tolist() if crit in df_sel.columns else []
         avg = round(sum(vals)/len(vals), 2) if vals else 0
         rs.append(avg)
     polar = go.Figure()
     polar.add_trace(go.Scatterpolar(
-        r=rs + [rs[0]], theta=categories + [categories[0]], fill='toself',
-        name=view_participant
+        r=rs + [rs[0]], theta=categories + [categories[0]], fill='toself', name=view_participant
     ))
     polar.update_layout(polar=dict(radialaxis=dict(visible=True, range=[0, 10])))
 
-    # Photo path
+    # Participant photo
     photo = view_participant.split(" ")[0]
     src = f"/assets/photo/{photo}.PNG"
 
     return tf, src, rd_text, rd_title, polar, table_data
 
+# Run server
 if __name__ == "__main__":
     app.run_server(debug=True, port=8051)
