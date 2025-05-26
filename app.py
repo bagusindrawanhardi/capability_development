@@ -277,7 +277,7 @@ def update_sliders(week):
     State("reviewer", "value"),
     State("week", "value"),
     State({"type": "dynamic-slider", "index": ALL}, "value"),
-    State({"type": "dynamic-slider", "index": ALL}, "id")
+    State({"type": "dynamic-slider", "index": ALL}, "id"))
 def update_scores(submit_clicks, view_participant, participant, reviewer, week, values, ids):
     global score_data, sh
     ctx = dash.callback_context
