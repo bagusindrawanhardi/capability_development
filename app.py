@@ -179,7 +179,7 @@ app.layout = html.Div(
                     style={'display': 'flex', 'justifyContent': 'space-between'}
                 )
             ],
-            style={'width': '58%', 'display': 'inline-block', 'padding': '20px',
+            style={'width': '60%', 'display': 'inline-block', 'padding': '20px',
                    'border': '2px solid #ccc', 'borderRadius': '10px',
                    'boxShadow': '0 2px 6px rgba(0,0,0,0.1)', 'marginLeft': '2%'}
         )
