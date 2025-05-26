@@ -40,7 +40,6 @@ try:
     creds = Credentials.from_service_account_file(cred_file, scopes=scope)
     gc = gspread.authorize(creds)
     sh = gc.open_by_key(sheet_key)
-    score_data = []
     for ws in sh.worksheets():
         df_tmp = pd.DataFrame(ws.get_all_records())
         score_data.extend(df_tmp.to_dict('records'))
@@ -55,8 +54,8 @@ except Exception as e:
 # --- Data definitions ---
 participants = [
     "Ernanda (BackEnd Developer)", "Yudi (FrontEnd Developer)", "Wahyu Widi (Developer)",
-    "Gilas (Developer)", "Irwan (FrontEnd Developer)", "Nahrowi (Data Scientist)",
-    "David (Designer)", "Ammar (Product Manager)", "Zaki (BackEnd Developer)"
+    "Zaki (BackEnd Developer)", "Irwan (FrontEnd Developer)", "Nahrowi (Data Scientist)",
+    "David (Designer)", "Ammar (Product Manager)"
 ]
 
 week_dropdown = [
@@ -87,7 +86,12 @@ competency_map = {
     "Week 7": "Presentation", "Week 8": "Professionalism"
 }
 
-weeks = list(week_criteria.keys())
+# Ordered categories for windrose
+categories = [
+    "Communication", "Documentation", "Tool Explanation",
+    "Teamwork", "Interviewing", "Feedback",
+    "Presentation", "Professionalism"
+]
 
 # --- App setup ---
 app = dash.Dash(__name__, external_stylesheets=[dbc.themes.BOOTSTRAP])
@@ -138,8 +142,7 @@ app.layout = html.Div(
             style={
                 'width': '33%', 'display': 'inline-block', 'verticalAlign': 'top',
                 'padding': '20px', 'border': '2px solid #ccc', 'borderRadius': '10px',
-                'boxShadow': '0 2px 6px rgba(0,0,0,0.1)', 'backgroundColor': '#fafafa',
-                'height': '1055px'
+                'boxShadow': '0 2px 6px rgba(0,0,0,0.1)', 'backgroundColor': '#fafafa'
             }
         ),
         html.Div(
@@ -179,7 +182,7 @@ app.layout = html.Div(
                     style={'display': 'flex', 'justifyContent': 'space-between'}
                 )
             ],
-            style={'width': '60%', 'display': 'inline-block', 'padding': '20px',
+            style={'width': '55%', 'display': 'inline-block', 'padding': '20px',
                    'border': '2px solid #ccc', 'borderRadius': '10px',
                    'boxShadow': '0 2px 6px rgba(0,0,0,0.1)', 'marginLeft': '2%'}
         )
@@ -221,6 +224,7 @@ def update_scores(submit_clicks, view_participant, participant, reviewer, week, 
     ctx = dash.callback_context
     trig = ctx.triggered[0]["prop_id"].split(".")[0]
 
+    # Handle new submission
     if trig == "submit-score":
         criteria = [i["index"] for i in ids]
         final = round(sum(values) / len(values), 2) if values else 0
@@ -228,20 +232,19 @@ def update_scores(submit_clicks, view_participant, participant, reviewer, week, 
                      "Week": week, **dict(zip(criteria, values)),
                      "Final Score": final}
         score_data.append(new_entry)
-
+        # Sync back to Google Sheets
         if sh:
             df_all = pd.DataFrame(score_data)
             df_week = df_all[df_all['Week'] == week]
-            cols = ["Reviewer", "Participant", "Week"] + week_criteria[week] + ["Final Score"]
-            df_week = df_week[cols]
-            # Clean NaN and cast to string
-            clean_df = df_week.where(pd.notnull(df_week), "").astype(str)
+            cols = ["Reviewer", "Participant", "Week"] + week_criteria[week] + [
+                "Final Score"]
+            clean_df = df_week[cols].where(pd.notnull(df_week[cols]), "").astype(str)
             sheet_name = week.replace(" ", "").lower()
             try:
                 target_ws = sh.worksheet(sheet_name)
             except WorksheetNotFound:
                 target_ws = sh.add_worksheet(title=sheet_name,
-                                             rows=str(len(clean_df) + 1),
+                                             rows=str(len(clean_df)+1),
                                              cols=str(len(clean_df.columns)))
             target_ws.clear()
             target_ws.update([clean_df.columns.tolist()] + clean_df.values.tolist())
@@ -250,49 +253,49 @@ def update_scores(submit_clicks, view_participant, participant, reviewer, week, 
     df = pd.DataFrame(score_data)
     table_data = df[["Reviewer", "Participant", "Week", "Final Score"]].to_dict("records") if not df.empty else []
 
-    # Score Trend Figure
+    # Score Trend
     tf = go.Figure()
     if not df.empty:
         df_avg = df.groupby(["Participant", "Week"])['Final Score'].mean().reset_index()
         part_df = df_avg[df_avg['Participant'] == view_participant]
         tf.add_trace(go.Scatter(
-            x=part_df['Week'], y=part_df['Final Score'], mode='lines+markers', name=view_participant
+            x=part_df['Week'], y=part_df['Final Score'], mode='lines+markers'
         ))
-    tf.update_layout(
-        title=f"{view_participant} Score Trend",
-        xaxis_title="Week", yaxis_title="Score (0–10)", plot_bgcolor='white'
-    )
-    tf.update_xaxes(showgrid=True, gridwidth=1, gridcolor='lightgrey',
-                    minor=dict(showgrid=True, gridwidth=0.5, gridcolor='lightgrey'))
-    tf.update_yaxes(showgrid=True, gridwidth=1, gridcolor='lightgrey',
-                    minor=dict(showgrid=True, gridwidth=0.5, gridcolor='lightgrey'))
+    tf.update_layout(title=f"{view_participant} Score Trend",
+                     xaxis_title="Week", yaxis_title="Score (0–10)", plot_bgcolor='white')
 
-    # Readiness Score Text
-    pd_sel = df[df['Participant'] == view_participant] if not df.empty else pd.DataFrame()
-    all_scores = [v for w in weeks for c in week_criteria[w] if c in pd_sel.columns for v in pd_sel[c].dropna()]
-    readiness = round(sum(all_scores) / len(all_scores), 2) if all_scores else 0
+    # Readiness Score
+    df_sel = df[df['Participant'] == view_participant] if not df.empty else pd.DataFrame()
+    all_scores = [v for w in week_criteria for c in week_criteria[w]
+                  if c in df_sel.columns for v in df_sel[c].dropna()]
+    readiness = round(sum(all_scores)/len(all_scores), 2) if all_scores else 0
     rd_text = f"🚀 Readiness Score: {readiness}/10"
 
-    # Windrose Diagram
-    cats = list(set(competency_map.values()))
+    # Windrose using ordered categories
     rs = []
-    for cat in cats:
+    for cat in categories:
+        # gather all criteria values under this competency
         vals = []
-        for w, comp in competency_map.items():
+        for wk, comp in competency_map.items():
             if comp == cat:
-                for crit in week_criteria[w]:
-                    if crit in pd_sel.columns:
-                        vals += pd_sel[crit].tolist()
-        rs.append(round(sum(vals) / len(vals), 2) if vals else 0)
-    rf = go.Figure()
-    rf.add_trace(go.Scatterpolar(r=rs + [rs[0]], theta=cats + [cats[0]], fill='toself', name=view_participant))
-    rf.update_layout(polar=dict(radialaxis=dict(visible=True, range=[0, 10])))
+                for crit in week_criteria[wk]:
+                    if crit in df_sel.columns:
+                        vals += df_sel[crit].dropna().tolist()
+        avg = round(sum(vals)/len(vals), 2) if vals else 0
+        rs.append(avg)
+    # close polygon
+    polar = go.Figure()
+    polar.add_trace(go.Scatterpolar(
+        r=rs + [rs[0]], theta=categories + [categories[0]], fill='toself',
+        name=view_participant
+    ))
+    polar.update_layout(polar=dict(radialaxis=dict(visible=True, range=[0, 10])))
 
-    # Participant Photo Source
+    # Photo path
     photo = view_participant.split(" ")[0]
     src = f"/assets/photo/{photo}.PNG"
 
-    return tf, src, rd_text, rf, table_data
+    return tf, src, rd_text, polar, table_data
 
 if __name__ == "__main__":
     app.run_server(debug=True, port=8051)
