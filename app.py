@@ -162,16 +162,16 @@ app.layout = html.Div(
                     [
                         html.Div(
                             [html.Img(id="participant-photo", src="",
-                                      style={"height": "300px", "borderRadius": "10px", "marginBottom": "10px"}),
+                                      style={"height": "200px", "borderRadius": "10px", "marginTop": "30px", "marginBottom": "30px"}),
                              html.Div(id="readiness-score-text",
-                                      style={"fontSize": "36px", "fontWeight": "bold"})],
+                                      style={"fontSize": "30px", "fontWeight": "bold"})],
                             style={'border': '2px solid #28a745', 'padding': '20px',
                                    'borderRadius': '10px', 'width': '40%', 'color': '#28a745',
                                    'textAlign': 'center', 'display': 'inline-block',
                                    'backgroundColor': 'white', 'verticalAlign': 'top'}
                         ),
                         html.Div(dcc.Graph(id="windrose-diagram"),
-                                 style={'width': '58%', 'display': 'inline-block',
+                                 style={'width': '55%', 'display': 'inline-block',
                                         'verticalAlign': 'top', 'marginLeft': '2%',
                                         'padding': '10px', 'border': '2px solid #ff9933',
                                         'borderRadius': '10px', 'backgroundColor': '#fff'})
@@ -179,7 +179,7 @@ app.layout = html.Div(
                     style={'display': 'flex', 'justifyContent': 'space-between'}
                 )
             ],
-            style={'width': '58%', 'display': 'inline-block', 'padding': '20px',
+            style={'width': '55%', 'display': 'inline-block', 'padding': '20px',
                    'border': '2px solid #ccc', 'borderRadius': '10px',
                    'boxShadow': '0 2px 6px rgba(0,0,0,0.1)', 'marginLeft': '2%'}
         )
