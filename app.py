@@ -261,8 +261,33 @@ def update_scores(submit_clicks, view_participant, participant, reviewer, week, 
         tf.add_trace(go.Scatter(
             x=part_df['Week'], y=part_df['Final Score'], mode='lines+markers'
         ))
-    tf.update_layout(title=f"{view_participant} Score Trend",
-                     xaxis_title="Week", yaxis_title="Score (0–10)", plot_bgcolor='white')
+    # Enable major and minor grid lines
+    tf.update_layout(
+        title=f"{view_participant} Score Trend",
+        xaxis=dict(
+            title="Week",
+            showgrid=True,
+            gridcolor="lightgrey",
+            gridwidth=1,
+            minor=dict(
+                showgrid=True,
+                gridcolor="lightgrey",
+                gridwidth=0.5
+            )
+        ),
+        yaxis=dict(
+            title="Score (0–10)",
+            showgrid=True,
+            gridcolor="lightgrey",
+            gridwidth=1,
+            minor=dict(
+                showgrid=True,
+                gridcolor="lightgrey",
+                gridwidth=0.5
+            )
+        ),
+        plot_bgcolor='white'
+    )
 
     # Readiness Score
     df_sel = df[df['Participant'] == view_participant] if not df.empty else pd.DataFrame()
@@ -274,7 +299,6 @@ def update_scores(submit_clicks, view_participant, participant, reviewer, week, 
     # Windrose using ordered categories
     rs = []
     for cat in categories:
-        # gather all criteria values under this competency
         vals = []
         for wk, comp in competency_map.items():
             if comp == cat:
@@ -283,7 +307,6 @@ def update_scores(submit_clicks, view_participant, participant, reviewer, week, 
                         vals += df_sel[crit].dropna().tolist()
         avg = round(sum(vals)/len(vals), 2) if vals else 0
         rs.append(avg)
-    # close polygon
     polar = go.Figure()
     polar.add_trace(go.Scatterpolar(
         r=rs + [rs[0]], theta=categories + [categories[0]], fill='toself',
