@@ -167,7 +167,7 @@ app.layout = html.Div(
                             options=[{"label": p, "value": p} for p in participants],
                             value=participants[0],
                             clearable=False,
-                            style={"width": "600px", "marginBottom": "20px"}
+                            style={"width": "300px", "marginBottom": "20px"}
                         ),
                         dcc.Graph(
                             id="score-trend",
@@ -188,7 +188,7 @@ app.layout = html.Div(
                                 html.Img(
                                     id="participant-photo",
                                     src="",
-                                    style={"height": "200px", "borderRadius": "10px", "marginTop": "30px", "marginBottom": "30px"}
+                                    style={"height": "200px", "borderRadius": "10px", "marginTop": "40px", "marginBottom": "30px"}
                                 ),
                                 html.Div(
                                     id="readiness-score-text",
